@@ -67,20 +67,19 @@ module halfBodyShape() {
   }
 }
 
-// The for(mirror(mirror(translate is to account for the fact that the half body shape draws the left half, starting at
+// The for(mirror(translate is to account for the fact that the half body shape draws the left half, starting at
 // 0:0:0, and I don't know a better  way to mirror it for the other side. It works, but is a little ugly.
 for(m = [0:1])
   mirror([m, 0, 0])
-    mirror([1, 0, 0])
-      translate([-(width / 2), 0, 0])
-        union() {
-          // screw feet need to be offset slightly to account for the curve.
-          // should probably be fixed to be properly parametric but I'm... lazy.
-          translate([7, 0, 0])
-            foot(width, depth);
+    translate([-(width / 2), 0, 0])
+      union() {
+        // screw feet need to be offset slightly to account for the curve.
+        // should probably be fixed to be properly parametric but I'm... lazy.
+        translate([7, 0, 0])
+          foot(width, depth);
 
-          // main body
-          linear_extrude(depth) {
-            halfBodyShape();
-          }
+        // main body
+        linear_extrude(depth) {
+          halfBodyShape();
         }
+      }
