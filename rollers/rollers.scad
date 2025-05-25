@@ -23,6 +23,15 @@ module foot(width, depth) {
   }
 }
 
+// repeats the child shape in a circle with a given radius and number of points.
+module repeatCircle(radius, num_holes) {
+  for(i = [0:num_holes]) {
+    translate([radius * cos(i * (360 / num_holes)), radius * sin(i * (360 / num_holes)), 0]) {
+      children();
+    }
+  }
+}
+
 module halfBodyShape() {
   difference() {
     // Start with A Block
@@ -42,12 +51,9 @@ module halfBodyShape() {
 
     // cut out bearing screw holes - Make a circle of holes then offset them to the correct location.
     // a hack that limits precision, but fine for now.
-    num_holes = 20;
-    pathRadius = tubing_diameter / 2 + bearing_screw_padding;
-    for(i = [1:num_holes])
-      translate([width / 2, height + 0.1 * tubing_diameter, 0])
-        translate([pathRadius * cos(i * (360 / num_holes)), pathRadius * sin(i * (360 / num_holes)), 0])
-          circle(d = bearing_screw_diameter);
+    translate([width / 2, height + 0.1 * tubing_diameter, 0])
+      repeatCircle(tubing_diameter / 2 + bearing_screw_padding, 20)
+        circle(d = bearing_screw_diameter);
 
     // add support
     translate([width / 2, height / 2, 0]) {
@@ -61,12 +67,15 @@ module halfBodyShape() {
   }
 }
 
+// The for(mirror(mirror(translate is to account for the fact that the half body shape draws the left half, starting at
+// 0:0:0, and I don't know a better  way to mirror it for the other side. It works, but is a little ugly.
 for(m = [0:1])
   mirror([m, 0, 0])
     mirror([1, 0, 0])
       translate([-(width / 2), 0, 0])
         union() {
-          // screw feet
+          // screw feet need to be offset slightly to account for the curve.
+          // should probably be fixed to be properly parametric but I'm... lazy.
           translate([7, 0, 0])
             foot(width, depth);
 
