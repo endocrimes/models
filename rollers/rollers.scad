@@ -1,12 +1,12 @@
 width = 120.00;
 height = 150.00;
-depth = 13.00;
+depth = 8.00;
 
 tubing_diameter = 70.0;
 
-support_diameter = 20.0;
+support_diameter = 12;
 
-bearing_screw_diameter = 8.0;
+bearing_screw_diameter = 8;
 bearing_screw_padding = 6.0;
 
 $fn = 600;
